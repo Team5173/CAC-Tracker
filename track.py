@@ -161,7 +161,8 @@ class Runner(object):
         
     def setCurrentTrack(self, track):
         self.currentTrack = track
-
+       # if self not in track.currentRunners:
+           # track.addCurrentRunner(self)
     def calculateLapSpeed(self, session, laptime):
         return session.track.length / (laptime / 3600)
 
@@ -190,8 +191,9 @@ class Track(object):
         self.name = name
         self.runners = []
         self.currentRunners = []
-
-    def addRunner(self, weight, height, sex, name, idNum):
+    def addRunner(self, runner):
+        self.runners.append(runner)
+    def addNewRunner(self, weight, height, sex, name, idNum):
         self.runners.append(Runner(weight, height, sex, name, idNum))
 
     def addCurrentRunner(self, runner):
@@ -217,6 +219,21 @@ class Track(object):
         print('\n')
             
         
-        
+class tracker(object):
+    def __init__(self):
+        self.tracks = []
+        self.runners = []
+    def addTrack(self, name, length):
+        self.tracks.append(Track(name, length))
+
+    def addRunner(self, runner):
+        self.runners.append(runner)
+
+    def print(self):
+        for i in range(len(self.tracks)):
+            self.tracks[i].print()
+        for i in range(len(self.runners)):
+            self.runners[i].print()
+            
     
     
