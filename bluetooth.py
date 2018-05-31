@@ -17,12 +17,12 @@ while (True):
     rssi= os.popen("echo " + cmdout + " | sed -e 's/RSSI return value: //g')").read()                                   
 
 
-    if (btcurrent = notconnected ):
+    if (btcurrent == notconnected ):
         print(subprocess.Popen("echo Attempting connection..."), shell=True, stdout=subprocess.PIPE).stdout.read())
         print(subprocess.Popen("rfcomm connect 0 $device 1 2> /dev/null >/dev/null &"), shell=True, stdout=subprocess.PIPE).stdout.read())
         print(subprocess.Popen("sleep 1"), shell=True, stdout=subprocess.PIPE).stdout.read())        
         
-    if (btcurrent = connected):
+    if (btcurrent == connected):
         print(subprocess.Popen("echo \"Device connected. RSSI: \"$rssi"), shell=True, stdout=subprocess.PIPE).stdout.read())
 
     if (btconnected != btcurrent):
