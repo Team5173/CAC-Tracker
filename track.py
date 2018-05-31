@@ -6,16 +6,27 @@ from datetime import datetime, timedelta
 class Session(object):
     
     def __init__(self, track):
+        #Track that user's session took place at
         self.track = track
+        #List of lap times user ran during session
         self.lapTimes = []
+        #fastest lap user randuring session
         self.fastestLap = 999999.9
+        #last lap time that the user ran this session
         self.lastLap = 0
+        #total number of laps ran this session
         self.totalLaps = 0
+        #total miles ran this session
         self.milesRan = 0
+        #total calories burned this session
         self.caloriesBurned = 0
+        #average speed of runner this session
         self.avgSpeed = 0
+        #average lap time of runner this session
         self.avgLapTime = 0.0
+        #time user started running this session
         self.startTime = time.time()
+        #time user stopped running this session
         self.endTime = time.time()
 
     def print(self):
@@ -43,37 +54,35 @@ class Runner(object):
         Modifies: self (this instance of the Runner object)
         Effects:  This is the Runner constructor.
         """
+        #user's average speed overall
         self.avgSpeed = 0.0
+        #user's average laptime overall
         self.avgLapTime = 0.0
-        self.lapTimes = []
-        self.lapRecord = 999999999.9
-        self.lastLap = 0.0
+        #total number of miles ran by user
         self.milesLogged = 0.0
-        self.totalLapsRan = 0
+        #user's waeight in kilograms (expected to be entered in pounds, converted for kCal formula)
         self.weight = (weight * 0.45)
+        #User's name
         self.name = name
-        self.height = height #height stored in [feet, inches] format
-        self.sex = sex
+        #User's unique identification number (possibly Google Client ID + WristbandIDNum / cvButton?
         self.idNum = idNum
-        self.currentTrack = Track('', 0.0)
+        #Tracks that the user has registered with
         self.tracks = []
-        self.currentSession = Session(self.currentTrack)
+        #user's current running session
+        self.currentSession = Session(Track('', 0))
+        #list of all sessions user has ran
         self.sessions = []
 
+
+
+        #fix this
+        self.lapRecords = []
 
     def print(self):
         print('Runner Name: ') 
         print(self.name)
         print('Runner ID: ') 
         print(self.idNum)
-        print('Runner Sex: ') 
-        print(self.sex)
-        print('Current Track: ')
-        print(self.currentTrack.name)
-        print('Last Lap: ')
-        print(self.lastLap)
-        print('Total Laps Ran: ')
-        print(self.totalLapsRan)
         print('Miles Ran: ')
         print(self.milesLogged)
         print('Average Speed: ')
@@ -81,11 +90,16 @@ class Runner(object):
         print('\n')
 
     def addLap(self, lapTime):
-        self.lapTimes.append(lapTime)
-        if lapTime < self.lapRecord:
-            self.lapRecord = lapTime
+        """
+        Requires: nothing
+        Modifies: self (this instance of the Runner object)
+        Effects:  
+        """
+        #self.lapTimes.append(lapTime)
+        #if lapTime < self.lapRecord:
+        #   self.lapRecord = lapTime
         self.lastLap = lapTime
-        self.totalLapsRan += 1
+        #self.totalLapsRan += 1
         self.milesLogged += self.currentSession.track.length
         
         self.currentSession.lastLap = lapTime
@@ -98,7 +112,11 @@ class Runner(object):
             self.currentSession.fastestLap = lapTime
         
     def addCalories(self, lapTime):
-
+        """
+        Requires: nothing
+        Modifies: self (this instance of the Runner object)
+        Effects:  This is the Runner constructor.
+        """
         smallest = 999
         smallestMETS = 9999
         with open('METS.json') as json_data:
@@ -108,12 +126,17 @@ class Runner(object):
                     if (self.calculateLapSpeed(self.currentSession, lapTime) / float(list(d.keys())[i])) < smallest:
                         smallestMETS = float(list(d.values())[i])
                         smallest = (self.calculateLapSpeed(self.currentSession, lapTime) + float(list(d.keys())[i])) / 2
-        METS = smallestMETS #Look up online
+        METS = smallestMETS
         Kcal= 0 
         self.currentSession.caloriesBurned += (METS * self.weight * (((lapTime) / 60) / 60))
 
 
     def addAvgCalories(self):
+        """
+        Requires: nothing
+        Modifies: self (this instance of the Runner object)
+        Effects:  This is the Runner constructor.
+        """
         smallest = 999
         smallestMETS = 9999
         with open('METS.json') as json_data:
@@ -133,8 +156,11 @@ class Runner(object):
         
         
     def newSession(self, session):
-        #self.sessions.append(self.currentSession)
-        #self.addAvgCalories()
+        """
+        Requires: nothing
+        Modifies: self (this instance of the Runner object)
+        Effects:  This is the Runner constructor.
+        """
         self.currentSession.track.currentRunners.remove(self)
         self.currentSession.endTime = time.time()
         self.currentSession = session
@@ -160,13 +186,28 @@ class Runner(object):
         date_chart.render_to_file('calories'+ str(self.idNum) + '.svg')  
         
     def setCurrentTrack(self, track):
+        """
+        Requires: nothing
+        Modifies: self (this instance of the Runner object)
+        Effects:  This is the Runner constructor.
+        """
         self.currentTrack = track
        # if self not in track.currentRunners:
            # track.addCurrentRunner(self)
     def calculateLapSpeed(self, session, laptime):
+        """
+        Requires: nothing
+        Modifies: self (this instance of the Runner object)
+        Effects:  This is the Runner constructor.
+        """
         return session.track.length / (laptime / 3600)
 
     def calculateAverageSpeed(self):
+        """
+        Requires: nothing
+        Modifies: self (this instance of the Runner object)
+        Effects:  This is the Runner constructor.
+        """
         average = 0
         iterator = 0
         if len(self.sessions) >= 1:
