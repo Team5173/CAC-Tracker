@@ -1,6 +1,6 @@
 import subprocess
 devices = {'D4:63:C6:3B:B9:BD': 0}
-print(subprocess.Popen("cmdout=$(hcitool rssi" + list(devices.keys())[0] + ")", shell=True, stdout=subprocess.PIPE).stdout.read())
+print(subprocess.Popen("cmdout=$(hcitool rssi " + list(devices.keys())[0] + ")", shell=True, stdout=subprocess.PIPE).stdout.read())
 
 '''
 nearby_devices = []
