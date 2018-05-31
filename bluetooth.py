@@ -2,15 +2,6 @@ import subprocess
 devices = {'D4:63:C6:3B:B9:BD': 0}
 print(subprocess.Popen("cmdout=$(hcitool rssi " + list(devices.keys())[0] + ")", shell=True, stdout=subprocess.PIPE).stdout.read())
 
-'''
-nearby_devices = []
-
-devices = {}
-
-
-
-
-device="F4:F5:24:80:9B:FC"
 btconnected=0
 btcurrent=-1
 counter=0
@@ -19,38 +10,31 @@ connected="1"
 rssi=-1
 
 #Command loop:
-while [ 1 ]; do
-cmdout=$(hcitool rssi $device)
-btcurrent=$(echo $cmdout | grep -c "RSSI return value") 2> /dev/null
-rssi=$(echo $cmdout | sed -e 's/RSSI return value: //g')
+while (True):
+    
+    cmdout= os.popen("hcitool rssi " + list(devices.keys())[0]).read()
+    btcurrent= os.popen("echo " + cmdout + " | grep -c \"RSSI return value\") 2> /dev/null").read()
+    rssi= os.popen("echo " + cmdout + " | sed -e 's/RSSI return value: //g')").read()                                   
 
 
-if [ $btcurrent = $notconnected ]; then
-        echo "Attempting connection..."
-        rfcomm connect 0 $device 1 2> /dev/null >/dev/null &
-        sleep 1
-fi
+    if (btcurrent = notconnected ):
+        print(subprocess.Popen("echo Attempting connection..."), shell=True, stdout=subprocess.PIPE).stdout.read())
+        print(subprocess.Popen("rfcomm connect 0 $device 1 2> /dev/null >/dev/null &"), shell=True, stdout=subprocess.PIPE).stdout.read())
+        print(subprocess.Popen("sleep 1"), shell=True, stdout=subprocess.PIPE).stdout.read())        
+        
+    if (btcurrent = connected):
+        print(subprocess.Popen("echo \"Device connected. RSSI: \"$rssi"), shell=True, stdout=subprocess.PIPE).stdout.read())
 
-if [ $btcurrent = $connected ]; then
-        echo "Device connected. RSSI: "$rssi
-fi
+    if (btconnected != btcurrent):
+        if (btcurrent != 0 ):
+                print(subprocess.Popen("echo GONE!"), shell=True, stdout=subprocess.PIPE).stdout.read())
+        if (btcurrent != 1 ):
+                print(subprocess.Popen("echo HERE!"), shell=True, stdout=subprocess.PIPE).stdout.read())
 
-if [ $btconnected -ne $btcurrent ]; then
-        if [ $btcurrent -eq 0 ]; then
-                echo "GONE!"
-        fi
-        if [ $btcurrent -eq 1 ]; then
-                echo "HERE!"
-        fi
-        btconnected=$btcurrent
-fi
-
-sleep 1
-
-done
-                                                
+        btconnected = btcurrent
 
 
+print(subprocess.Popen("sleep 1"), shell=True, stdout=subprocess.PIPE).stdout.read())
 
-os.system("some_command with args")
-'''
+print(subprocess.Popen("done"), shell=True, stdout=subprocess.PIPE).stdout.read())
+                              
