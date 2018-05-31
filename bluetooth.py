@@ -14,6 +14,7 @@ rssi=-1
 while (True):
     
     cmdout= os.popen("hcitool rssi " + list(devices.keys())[0]).read()
+    '''
     btcurrent= os.popen("echo " + cmdout + " | grep -c \"RSSI return value\") 2> /dev/null").read()
     rssi= os.popen("echo " + cmdout + " | sed -e 's/RSSI return value: //g')").read()                                   
 
