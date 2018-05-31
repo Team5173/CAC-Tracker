@@ -19,8 +19,8 @@ while (True):
 
     if (btcurrent == notconnected ):
         print(subprocess.Popen("echo Attempting connection...", shell=True, stdout=subprocess.PIPE).stdout.read())
-        print(subprocess.Popen("rfcomm connect 0 $device 1 2> /dev/null >/dev/null &"), shell=True, stdout=subprocess.PIPE).stdout.read())
-        print(subprocess.Popen("sleep 1"), shell=True, stdout=subprocess.PIPE).stdout.read())        
+        print(subprocess.Popen("rfcomm connect 0 $device 1 2> /dev/null >/dev/null &", shell=True, stdout=subprocess.PIPE).stdout.read())
+        print(subprocess.Popen("sleep 1", shell=True, stdout=subprocess.PIPE).stdout.read())        
         
     if (btcurrent == connected):
         print(subprocess.Popen("echo \"Device connected. RSSI: \"$rssi", shell=True, stdout=subprocess.PIPE).stdout.read())
@@ -34,7 +34,7 @@ while (True):
         btconnected = btcurrent
 
 
-print(subprocess.Popen("sleep 1"), shell=True, stdout=subprocess.PIPE).stdout.read())
+print(subprocess.Popen("sleep 1", shell=True, stdout=subprocess.PIPE).stdout.read())
 
-print(subprocess.Popen("done"), shell=True, stdout=subprocess.PIPE).stdout.read())
+print(subprocess.Popen("done", shell=True, stdout=subprocess.PIPE).stdout.read())
                               
