@@ -48,7 +48,7 @@ class Session(object):
         
 class Runner(object):
 
-    def __init__(self, weight, height, sex, name, idNum):
+    def __init__(self, weight, name, idNum):
         """
         Requires: nothing
         Modifies: self (this instance of the Runner object)
@@ -58,6 +58,8 @@ class Runner(object):
         self.avgSpeed = 0.0
         #user's average laptime overall
         self.avgLapTime = 0.0
+        #
+        self.lapRecords = {}
         #total number of miles ran by user
         self.milesLogged = 0.0
         #user's waeight in kilograms (expected to be entered in pounds, converted for kCal formula)
@@ -72,11 +74,6 @@ class Runner(object):
         self.currentSession = Session(Track('', 0))
         #list of all sessions user has ran
         self.sessions = []
-
-
-
-        #fix this
-        self.lapRecords = []
 
     def print(self):
         print('Runner Name: ') 
@@ -95,13 +92,11 @@ class Runner(object):
         Modifies: self (this instance of the Runner object)
         Effects:  
         """
-        #self.lapTimes.append(lapTime)
-        #if lapTime < self.lapRecord:
-        #   self.lapRecord = lapTime
-        self.lastLap = lapTime
-        #self.totalLapsRan += 1
+        #print(self.lapRecords)
+        if lapTime < self.lapRecords[self.currentSession.track.name]:
+            self.lapRecords[self.currentSession.track.name] = lapTime
+        self.currentSession.track.leaderboard.addTop10Runner(self)
         self.milesLogged += self.currentSession.track.length
-        
         self.currentSession.lastLap = lapTime
         self.currentSession.totalLaps += 1
         self.currentSession.lapTimes.append(lapTime)
@@ -110,7 +105,9 @@ class Runner(object):
         self.currentSession.milesRan += self.currentSession.track.length
         if lapTime < self.currentSession.fastestLap:
             self.currentSession.fastestLap = lapTime
-        
+        print('#########HERE############')
+        self.currentTrack.leaderboard.print()
+        print('#########HERE############')
     def addCalories(self, lapTime):
         """
         Requires: nothing
@@ -164,22 +161,17 @@ class Runner(object):
         self.currentSession.track.currentRunners.remove(self)
         self.currentSession.endTime = time.time()
         self.currentSession = session
-        self.currentTrack = session.track
-        session.track.currentRunners.append(self)
-        session.track.runners.append(self)
+        session.track.addCurrentRunner(self)
+        session.track.addRunner(self)
         self.sessions.append(session)
+        
         caloriesBurned = []
         times = []
         for i in range(len(self.sessions)):
             if self.sessions[i].caloriesBurned != 0:
                 caloriesBurned.append(self.sessions[i].caloriesBurned)
                 times.append(datetime.fromtimestamp(int(self.sessions[i].startTime)).strftime('%Y-%m-%d %H:%M:%S'))
-                #print(self.sessions[i].caloriesBurned)
-
-
-
-        
-        
+                
         date_chart = pygal.Line(x_label_rotation=20)
         date_chart.x_labels = map(str, times)
         date_chart.add("Calories Burned", caloriesBurned)
@@ -227,13 +219,14 @@ class Runner(object):
 class Track(object):
 
     def __init__(self, name, length):
-        
+        self.leaderboard = leaderboard(self)
         self.length = length #Miles
         self.name = name
         self.runners = []
         self.currentRunners = []
     def addRunner(self, runner):
         self.runners.append(runner)
+        runner.lapRecords[self.name] = 99999999
     def addNewRunner(self, weight, height, sex, name, idNum):
         self.runners.append(Runner(weight, height, sex, name, idNum))
 
@@ -258,7 +251,6 @@ class Track(object):
         for i in range(len(self.runners)):
             print(self.runners[i].idNum)
         print('\n')
-            
         
 class tracker(object):
     def __init__(self):
@@ -276,5 +268,66 @@ class tracker(object):
         for i in range(len(self.runners)):
             self.runners[i].print()
             
-    
-    
+class leaderboard(object):
+    def __init__(self, track):
+        '''
+        Requires: Track is a valid track object
+        Modifies: Nothing
+        Effects: Leaderboard 
+        '''
+        self.top10 = []
+        self.track = track
+    def newWeek(self):
+        '''
+        Requires: Nothing
+        Modifies: List of Top 10 runners
+        Effects: Resets the leaderboard
+        '''
+        self.top10 = [] 
+    def addTop10Runner(self, runner):
+        '''
+        Requires: Runner is a valid runner object
+        Modifies: List of Top 10 runners
+        Effects: Adds runner if they qualify to be added to the leaderboard
+        '''
+
+        #Checks if leaderboard is empty
+        if len(self.top10) == 0:
+            #if leaderboard is empty, adds input runner
+            self.top10.append(runner)
+            return
+        #Iterates through leaderboard
+        for i in range(len(self.top10)):
+
+            #Checks if runner is faster than the runner at the i index in the leaderboard
+            if runner.lapRecords[self.track.name] < self.top10[i].lapRecords[self.track.name]:
+                if runner in self.top10:
+                    #If runner is already on the leaderboard, remove them
+                    self.top10.remove(runner)
+                #
+                self.top10.insert(i, runner)
+                if len(self.top10) > 10:
+                    self.top10.pop(10)
+                break
+        self.top10.sort(key=self.leaderSort)
+    def leaderSort(self, runner):
+        return runner.lapRecords[self.track.name]
+    def print(self):
+        '''
+        Requires: Nothing
+        Modifies: Nothing
+        Effects: Prints leaderboard
+        '''
+        for i in range(len(self.top10)):
+            
+            
+            if i == 0:
+                print('1st place: ')
+            if i == 1:
+                print('2nd place: ')
+            if i == 2:
+                print('3rd place: ')
+            if i != 0 and i != 1 and i != 2:
+                print(str(i + 1) + 'th place: ')
+            print(self.top10[i].name + ' ' + str(self.top10[i].lapRecords[self.track.name]))
+        
