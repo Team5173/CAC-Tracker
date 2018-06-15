@@ -105,9 +105,9 @@ class Runner(object):
         self.currentSession.milesRan += self.currentSession.track.length
         if lapTime < self.currentSession.fastestLap:
             self.currentSession.fastestLap = lapTime
-        print('#########HERE############')
-        self.currentTrack.leaderboard.print()
-        print('#########HERE############')
+        #print('#########HERE############')
+        #self.currentTrack.leaderboard.print()
+        #print('#########HERE############')
     def addCalories(self, lapTime):
         """
         Requires: nothing

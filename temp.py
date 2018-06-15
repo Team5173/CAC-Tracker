@@ -54,9 +54,9 @@ def main():
     myTrack.currentRunners[5].addLap(60)
     myTrack.currentRunners[5].addLap(35)
 
-    for i in range(len(myTrack.currentRunners)):
+    #for i in range(len(myTrack.currentRunners)):
         #myTrack.currentRunners[i].print()
-        myTrack.currentRunners[i].currentSession.print()
+        #myTrack.currentRunners[i].currentSession.print()
 
     
 
@@ -98,9 +98,9 @@ def main():
     secondTrack.currentRunners[5].addLap(60)
     secondTrack.currentRunners[5].addLap(35)
 
-    for i in range(len(secondTrack.currentRunners)):
+    #for i in range(len(secondTrack.currentRunners)):
         #myTrack.currentRunners[i].print()
-        secondTrack.currentRunners[i].currentSession.print()
+        #secondTrack.currentRunners[i].currentSession.print()
 
 
 
@@ -215,11 +215,10 @@ def main():
     fourthTrack.runners[4].newSession(Session(fourthTrack))
     fourthTrack.runners[5].newSession(Session(fourthTrack))
     
-    for i in range(len(fourthTrack.currentRunners)):
-        fourthTrack.currentRunners[i].print()
+    #for i in range(len(fourthTrack.currentRunners)):
+        #fourthTrack.currentRunners[i].print()
         #fourthTrack.currentRunners[i].currentSession.print()
     #secondTrack.runners[0].sessions[0].print()
     
 if __name__ == '__main__':
     main()
-
