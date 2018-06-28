@@ -45,6 +45,17 @@ class Session(object):
         print('Average Speed: ')
         print(self.avgSpeed)
         print('\n')
+
+    def stringIt(self):
+        session = str()
+        session += '{:<20}'.format(str(timedelta(seconds=self.fastestLap))[:7])
+        session += '{:<20}'.format(str(timedelta(seconds=self.lastLap))[:7])
+        session +='{:<20}'.format(str(self.totalLaps)[:7])
+        session +='{:<20}'.format(str(self.milesRan)[:7])
+        session +='{:<20}'.format(str(self.caloriesBurned)[:7])
+        session +=str(self.avgSpeed)[:7] + ' mph'
+        session +='\n'
+        return session
         
 class Runner(object):
 
@@ -114,8 +125,8 @@ class Runner(object):
         Modifies: self (this instance of the Runner object)
         Effects:  This is the Runner constructor.
         """
-        smallest = 999
-        smallestMETS = 9999
+        smallest = 9999999
+        smallestMETS = 9999999
         with open('METS.json') as json_data:
             d = json.load(json_data)
             for i in range(len(d.keys())):
@@ -134,16 +145,20 @@ class Runner(object):
         Modifies: self (this instance of the Runner object)
         Effects:  This is the Runner constructor.
         """
-        smallest = 999
-        smallestMETS = 9999
+        smallest = 99999999
+        smallestMETS = 99999999
         with open('METS.json') as json_data:
             d = json.load(json_data)
             for i in range(len(d.keys())):
-                if (self.currentSession.avgSpeed / float(list(d.keys())[i])) >= 1:
-                    if (self.currentSession.avgSpeed / float(list(d.keys())[i])) < smallest:
-                        smallestMETS = float(list(d.values())[i])
-                        smallest = (self.currentSession.avgSpeed + float(list(d.keys())[i])) / 2
-        
+                if self.currentSession.avgSpeed >= 1:
+                    if (self.currentSession.avgSpeed / float(list(d.keys())[i])) >= 1:
+                        if (self.currentSession.avgSpeed / float(list(d.keys())[i])) < smallest:
+                            smallestMETS = float(list(d.values())[i])
+                            smallest = (self.currentSession.avgSpeed + float(list(d.keys())[i])) / 2
+                elif self.currentSession.avgSpeed < 1:
+                    smallestMETS = 1
+                    smallest = 1
+                    
         totalTime = 0
         METS = smallestMETS
         for i in range(len(self.currentSession.lapTimes)):
@@ -330,4 +345,26 @@ class leaderboard(object):
             if i != 0 and i != 1 and i != 2:
                 print(str(i + 1) + 'th place: ')
             print(self.top10[i].name + ' ' + str(self.top10[i].lapRecords[self.track.name]))
+    def stringIt(self):
+        '''
+        Requires: Nothing
+        Modifies: Nothing
+        Effects: Makes string of leaderboard
+        '''
+        leaderboard = str()
+        for i in range(len(self.top10)):
+            
+            
+            if i == 0:
+                leaderboard += '1st place: '
+            if i == 1:
+                leaderboard += '2nd place: '
+            if i == 2:
+                leaderboard += '3rd place: '
+            if i != 0 and i != 1 and i != 2:
+                leaderboard += str(i + 1) + 'th place: '
+            leaderboard += self.top10[i].name + ' ' + str(timedelta(seconds=self.top10[i].lapRecords[self.track.name]))[:10] + '\n'
+        
+
+        return leaderboard
         

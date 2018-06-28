@@ -1,15 +1,5 @@
 from track import *
-'''
-class tracker(object):
-    def __init__(self):
-        tracks = []
-        runners = []
-    def addTrack(name, length):
-        tracks.append(Track(name, length))
 
-    def addRunner(self, runner):
-        self.runners.append(runner)
-'''
 
 def main():
     
